@@ -46,7 +46,7 @@ export const MESSAGES = {
     OTP_ALREADY_SENT: "OTP already sent.",
     INVALID_OTP: "Invalid OTP.",
     RESET_EMAIL_FAILED: "Failed to send reset email. Try again later.",
-    NOT_FOUND: "Mentor not found.",
+    NOT_FOUND: "User not found.",
     STATUS_PENDING: (status: string) => `This user is ${status}`,
     PLEASE_SIGNUP: "Please signup.",
     APPLY_FIRST: "Please apply to be a mentor.",

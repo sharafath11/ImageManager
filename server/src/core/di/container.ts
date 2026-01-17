@@ -3,7 +3,7 @@ import { AuthRepository } from "../../repository/authRepository";
 import { AuthService } from "../../services/auth.Service";
 import { IAuthController } from "../interfaces/controllers/IAuth.Controller";
 import { IAuthRepository } from "../interfaces/repository/IAuthRepository";
-import { IAuthService } from "../interfaces/services/IAuthService";
+import { IAuthService } from "../interfaces/services/IAuth.service";
 import { TYPES } from "../types";
 import { container } from "tsyringe";
 

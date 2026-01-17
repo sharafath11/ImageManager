@@ -109,7 +109,7 @@ export default function LoginPage() {
     setIsLoading(false)
 
     if (!res || !res.ok) {
-      const errorMsg = res?.msg || "Login failed"
+      const errorMsg = res?.msg 
       
       if (errorMsg.toLowerCase().includes("verify")) {
         setAlertMessage(errorMsg)

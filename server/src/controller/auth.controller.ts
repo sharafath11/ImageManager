@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { inject, injectable } from "tsyringe";
 import { IAuthController } from "../core/interfaces/controllers/IAuth.Controller";
-import { IAuthService } from "../core/interfaces/services/IAuthService";
+import { IAuthService } from "../core/interfaces/services/IAuth.service";
 import { TYPES } from "../core/types";
 import { MESSAGES } from "../const/messages";
 import { StatusCode } from "../enums/statusCode";

@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import bcrypt from "bcrypt";
 import { OAuth2Client } from "google-auth-library";
-import { IAuthService } from "../core/interfaces/services/IAuthService";
+import { IAuthService } from "../core/interfaces/services/IAuth.service";
 import { IAuthRepository } from "../core/interfaces/repository/IAuthRepository";
 import { TYPES } from "../core/types";
 import { throwError } from "../utils/response";
@@ -35,44 +35,47 @@ export class AuthService implements IAuthService {
     return UserResponseMapper.toLoginUserResponse(user,token,refreshToken);
   }
 
-  async signup(data: { name: string; email: string; password: string }): Promise<void> {
-    const existUser = await this._authRepo.findOne({ email: data.email });
-    
-    if (existUser && existUser.isVerified) {
-      throwError(MESSAGES.AUTH.USER_ALREADY_EXISTS);
-    }
-    
-    let user = existUser;
-    if (existUser && !existUser.isVerified) {
-      const hashedPassword = await bcrypt.hash(data.password, 10);
-      await this._authRepo.update(existUser._id as unknown as string, {
-        username: data.name,
-        password: hashedPassword,
-      });
-      user = await this._authRepo.findById(existUser._id as unknown as string);
-    } else {
-      user = await this._authRepo.create({
-        username: data.name,
-        email: data.email,
-        password: data.password,
-        isVerified: false,
-      });
-    }
-    
-    if (!user) throwError(MESSAGES.AUTH.USER_UPDATE_FAILED);
-    
-    const otp = generateOtp();
-    const redisKey = `otp:register:${user.email}`;
-    
-    await redis.set(redisKey, otp, "EX", OTP_TTL_SECONDS);
-    await sendEmailOtp(user.email, otp);
+async signup(data: { name: string; email: string; password: string }):Promise<void> {
+  const existingUser = await this._authRepo.findOne({ email: data.email });
+  if (existingUser?.isVerified) {
+    throwError(MESSAGES.AUTH.USER_ALREADY_EXISTS);
   }
+  let user;
+  const hashedPassword = await bcrypt.hash(data.password, 10);
+  if (existingUser && !existingUser.isVerified) {
+    user = existingUser;
+  } 
+  else {
+    user = await this._authRepo.create({
+      username: data.name,
+      email: data.email,
+      password: hashedPassword,
+      isVerified: false,
+    });
+  }
+
+  if (!user) {
+    throwError(MESSAGES.COMMON.SERVER_ERROR);
+  }
+
+  const otp = generateOtp();
+  const redisKey = `otp:register:${user._id}`;
+  const existingOtp = await redis.get(redisKey);
+  if (existingOtp) {
+    throwError(MESSAGES.AUTH.OTP_ALREADY_SENT);
+  }
+
+  await redis.set(redisKey, otp, "EX", OTP_TTL_SECONDS);
+  await sendEmailOtp(user.email, otp);
+
+}
+
 
   async verifyOtp(email: string, otp: string): Promise<void> {
     const user = await this._authRepo.findOne({ email });
     if (!user) throwError(MESSAGES.AUTH.NOT_FOUND);
     
-    const redisKey = `otp:register:${email}`;
+    const redisKey = `otp:register:${user._id}`;
     const storedOtp = await redis.get(redisKey);
     
     if (!storedOtp) throwError(MESSAGES.AUTH.OTP_EXPIRED);
