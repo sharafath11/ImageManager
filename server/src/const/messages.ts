@@ -6,6 +6,7 @@ export const MESSAGES = {
     SUCCESS: "Operation completed successfully",
     FAIL: "Operation failed",
     ACCESS_DENIED: "Access denied. You do not have permission to perform this action.",
+    NOT_FOUND: "Resource not found",
   },
   REPOSITORY: {
     CREATE_ERROR: "Error creating document",
@@ -29,6 +30,7 @@ export const MESSAGES = {
     OTP_SENT: "OTP sent successfully.",
     FORGOT_PASSWORD_SUCCESS: "Password reset email sent if account exists.",
     AUTH_REQUIRED: "Authentication required.",
+    UNAUTHORIZED: "Unauthorized access.",
     PASSWORD_NOT_MATCH: "Password does not match.",
     PASSWORD_RESET_SUCCESS: "Password reset successfully.",
     CHANGE_PASSWORD: "Password changed successfully.",

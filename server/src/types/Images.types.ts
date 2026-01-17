@@ -1,7 +1,7 @@
-import { Types } from "mongoose"
+import { Document, Types } from "mongoose"
 
-export interface IImage {
-  _id: string
+export interface IImage extends Document {
+  _id: Types.ObjectId
   userId: Types.ObjectId
   title: string
   imageUrl: string

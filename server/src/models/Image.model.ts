@@ -4,7 +4,7 @@ import { IImage } from "../types/Images.types"
 const ImageSchema = new Schema<IImage>(
   {
     userId: {
-      type: Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
       index: true

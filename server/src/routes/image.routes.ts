@@ -1,7 +1,7 @@
 import express from "express"
 import { container } from "tsyringe"
 import { TYPES } from "../core/types"
-import { IImageController } from "../core/interfaces/controllers/IImage.Controller"
+import { IImageController } from "../core/interfaces/controllers/IImage.controller"
 import { authenticateToken } from "../middleware/authenticateToken"
 import { uploadImages } from "../middleware/multer"
 
