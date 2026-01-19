@@ -10,6 +10,7 @@ import { OTPInput } from "@/components/otp-input"
 import { Alert } from "@/components/alert"
 import { userAuthMethods } from "@/services/methods/userMethods"
 import { showErrorToast, showSuccessToast } from "@/utils/toast"
+import { validateOtp } from "@/lib/validation/auth.validation"
 
 export default function VerifyPage() {
   const router = useRouter()
@@ -42,15 +43,17 @@ export default function VerifyPage() {
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (otp.length !== 6) {
-      setError("Please enter a valid 6-digit code")
-      return
+    const otpError = validateOtp(otp);
+    if (otpError) {
+      setError(otpError);
+      showErrorToast(otpError);
+      return;
     }
 
     setIsLoading(true)
     setError("")
 
-    const res = await userAuthMethods.verifyOtp({ email, otp })
+    const res = await userAuthMethods.verifyOtp({ email, otp: otp.trim() })
 
     setIsLoading(false)
 
@@ -97,7 +100,7 @@ export default function VerifyPage() {
           size="lg"
           className="w-full"
           isLoading={isLoading}
-          disabled={otp.length !== 6}
+          disabled={otp.length !== 6 || isLoading}
         >
           Verify email
         </Button>

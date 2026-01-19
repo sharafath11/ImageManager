@@ -1,49 +1,74 @@
 "use client"
 
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+import { IImage } from "@/types/image/imageTypes"
+import { Trash2, GripVertical, Pencil } from "lucide-react"
+
+interface Props {
+  image: IImage
+  onDelete: () => void
+  onEdit: (image: IImage) => void
+  disabled?: boolean
+}
+
 export default function SortableImageCard({
   image,
-  index,
-  onMove,
-  onDelete
-}: {
-  image: any
-  index: number
-  onMove: (from: number, to: number) => void
-  onDelete: () => void
-}) {
+  onDelete,
+  onEdit,
+  disabled = false,
+}: Props) {
+  const { setNodeRef, attributes, listeners, transform, transition } =
+    useSortable({ id: image.id, disabled })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  }
+
   return (
-    <div className="group rounded-xl border border-border bg-card overflow-hidden shadow-sm hover:shadow-md transition">
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="relative rounded-xl border bg-card overflow-hidden"
+    >
+      <div
+        {...attributes}
+        {...listeners}
+        className="absolute inset-0 z-10 flex items-center justify-center opacity-0 hover:opacity-100"
+      >
+        <GripVertical />
+      </div>
+
       <img
-        src={image.url}
+        src={image.imageUrl}
         alt={image.title}
-        className="h-36 w-full object-cover"
+        className="h-48 w-full object-cover"
       />
 
-      <div className="p-3 space-y-2">
-        <p className="text-sm font-medium truncate">{image.title}</p>
+      <div className="p-2 flex justify-between items-center relative z-20">
+        <span className="truncate text-sm">{image.title}</span>
 
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex gap-2">
-            <button
-              onClick={() => onMove(index, index - 1)}
-              disabled={index === 0}
-              className="text-muted-foreground hover:text-foreground disabled:opacity-30"
-            >
-              ↑
-            </button>
-            <button
-              onClick={() => onMove(index, index + 1)}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              ↓
-            </button>
-          </div>
-
+        <div className="flex gap-2">
           <button
-            onClick={onDelete}
-            className="text-red-500 hover:text-red-600"
+            onClick={(e) => {
+              e.stopPropagation()
+              onEdit(image)
+            }}
+            disabled={disabled}
+            className="hover:text-primary transition-colors"
           >
-            Delete
+            <Pencil size={16} />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              onDelete()
+            }}
+            disabled={disabled}
+            className="hover:text-destructive transition-colors"
+          >
+            <Trash2 size={16} />
           </button>
         </div>
       </div>

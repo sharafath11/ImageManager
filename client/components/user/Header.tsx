@@ -43,12 +43,12 @@ export default function Header() {
   return (
     <header className="w-full border-b bg-background sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between">
-        {/* LEFT */}
+        {}
         <h2 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight">
           Image Manager
         </h2>
 
-        {/* RIGHT */}
+        {}
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setOpen(!open)}

@@ -170,4 +170,37 @@ export class AuthController implements IAuthController {
       handleControllerError(res, error);
     }
   }
+
+  async forgotPassword(req: Request, res: Response): Promise<void> {
+    try {
+      validateBodyFields(req, ["email"]);
+      const { email } = req.body;
+      await this._authServices.forgotPassword(email);
+      sendResponse(res, StatusCode.OK, MESSAGES.AUTH.OTP_SENT, true);
+    } catch (error) {
+      handleControllerError(res, error);
+    }
+  }
+
+  async verifyForgotOtp(req: Request, res: Response): Promise<void> {
+    try {
+      validateBodyFields(req, ["email", "otp"]);
+      const { email, otp } = req.body;
+      await this._authServices.verifyForgotOtp(email, otp);
+      sendResponse(res, StatusCode.OK, MESSAGES.AUTH.VERIFICATION_SUCCESS, true);
+    } catch (error) {
+      handleControllerError(res, error);
+    }
+  }
+
+  async resetPassword(req: Request, res: Response): Promise<void> {
+    try {
+      validateBodyFields(req, ["email", "newPassword"]);
+      const { email, newPassword } = req.body;
+      await this._authServices.resetPassword(email, newPassword);
+      sendResponse(res, StatusCode.OK, "Password reset successfully", true);
+    } catch (error) {
+      handleControllerError(res, error);
+    }
+  }
 }

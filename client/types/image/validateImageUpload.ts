@@ -12,3 +12,11 @@ export type PreviewImage = {
   title: string
   preview: string
 }
+
+export type PreviewImageWithError = PreviewImage & {
+  errors: { title?: string; file?: string }
+}
+
+export interface ImageUploaderProps {
+  onUpload: (data: any[]) => void
+}

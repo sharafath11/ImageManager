@@ -96,44 +96,39 @@ export default function RegisterPage() {
     }
   };
 
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  const validationErrors = validateRegister(formData);
-  if (Object.keys(validationErrors).length > 0) {
-    setErrors(validationErrors);
-    return;
-  }
+    const validationErrors = validateRegister(formData);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      showErrorToast("Please fix the errors in the form")
+      return;
+    }
 
-  setIsLoading(true);
+    setIsLoading(true);
 
-  const res = await userAuthMethods.register({
-    fullName: formData.fullName,
-    email: formData.email,
-    password: formData.password,
-  });
+    const res = await userAuthMethods.register({
+      fullName: formData.fullName.trim(),
+      email: formData.email.trim(),
+      password: formData.password,
+    });
 
-  setIsLoading(false);
+    setIsLoading(false);
 
-  if (!res || !res.ok) {
-    setAlertMessage(res?.msg || "Registration failed");
-    showErrorToast(res?.msg || "Registration failed");
-    return;
-  }
+    if (!res || !res.ok) {
+      setAlertMessage(res?.msg || "Registration failed");
+      showErrorToast(res?.msg || "Registration failed");
+      return;
+    }
 
-  showSuccessToast(res.msg || "Registration successful");
-  sessionStorage.setItem("verifyEmail", formData.email);
-  router.push("/register/verify");
-};
+    showSuccessToast(res.msg || "Registration successful");
+    sessionStorage.setItem("verifyEmail", formData.email.trim());
+    router.push("/register/verify");
+  };
 
-
-  const isFormValid =
-    formData.fullName.trim() &&
-    formData.email.trim() &&
-    formData.password &&
-    formData.confirmPassword &&
-    formData.password === formData.confirmPassword &&
-    Object.keys(errors).length === 0;
+  const registerErrors = validateRegister(formData);
+  const isFormValid = Object.keys(registerErrors).length === 0 && !isLoading;
 
   return (
     <AuthCard title="Create account" description="Sign up to get started">

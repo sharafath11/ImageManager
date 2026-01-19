@@ -92,9 +92,14 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const validationErrors = validateLogin(formData)
+    const validationErrors = validateLogin({
+      email: formData.email.trim(),
+      password: formData.password
+    })
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
+      showErrorToast("Please fix the errors in the form")
       return
     }
 
@@ -102,7 +107,7 @@ export default function LoginPage() {
     setAlertMessage("")
 
     const res = await userAuthMethods.login({
-      email: formData.email,
+      email: formData.email.trim(),
       password: formData.password,
     })
 
@@ -128,7 +133,8 @@ export default function LoginPage() {
     router.push("/dashboard")
   }
 
-  const isFormValid = formData.email.trim() && formData.password
+  const loginErrors = validateLogin(formData)
+  const isFormValid = Object.keys(loginErrors).length === 0 && !isLoading
 
   return (
     <AuthCard title="Sign in" description="Welcome back to your account">

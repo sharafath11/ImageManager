@@ -1,12 +1,28 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Header from "@/components/user/Header"
 import ImageUploader from "./components/ImageUploader"
 import ImageGrid from "./components/ImageGrid"
+import { imageMethods } from "@/services/methods/userMethods"
+import { showInfoToast } from "@/utils/toast"
+import { IImage } from "@/types/image/imageTypes"
 
 export default function DashboardPage() {
-  const [images, setImages] = useState<any[]>([])
+  const [images, setImages] = useState<IImage[]>([])
+  const fetchImages = async () => {
+    const res = await imageMethods.getAll()
+    if (res?.ok) {
+      setImages(res.data)
+    }
+    else {
+      showInfoToast(res?.msg || "Failed to fetch images")
+    }
+  }
+
+  useEffect(() => {
+    fetchImages()
+  }, [])
 
   return (
     <div className="min-h-screen bg-background">

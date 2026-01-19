@@ -17,16 +17,6 @@ const cookieOptions = {
   path: "/",
 };
 
-
-
-// const cookieOptions = {
-//   httpOnly: true,
-//   secure: process.env.NODE_ENV === "production", 
-//   sameSite: "none" as const,                    
-//   domain: ".sharafathabi.cloud", 
-//   path: "/",                                     
-// };
-
 export const generateAccessToken = (id: string, role: string): string => {
   const payload: TokenPayload = { id, role };
   return jwt.sign(payload, SECRET_KEY, { expiresIn: ACCESS_EXPIRES_IN });

@@ -42,3 +42,17 @@ export type User = {
   isVerified: boolean;
   authProvider?: "local" | "google";
 };
+
+export type ForgotPasswordPayload = {
+  email: string;
+};
+
+export type VerifyForgotOtpPayload = {
+  email: string;
+  otp: string;
+};
+
+export type ResetPasswordPayload = {
+  email: string;
+  newPassword: string;
+};

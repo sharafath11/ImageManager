@@ -59,8 +59,9 @@ export class ImageService implements IImageService {
     const images = await this._imageRepo.findAll({
       userId: userObjectId
     })
-
-    return images.map(ImageResponseMapper.toImageDto)
+    const imageDto = images.map(ImageResponseMapper.toImageDto)
+     
+    return imageDto.sort((a, b) => a.order - b.order)
   }
 
   async reorderImages(

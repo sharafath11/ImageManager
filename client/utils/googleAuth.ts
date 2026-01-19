@@ -1,4 +1,4 @@
-/* global google */
+
 import { userAuthMethods } from "@/services/methods/userMethods";
 
 declare global {

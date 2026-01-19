@@ -8,4 +8,7 @@ export interface IAuthService {
     resendOtp(email: string): Promise<void>
     googleAuth(googleToken: string): Promise<IUserLoginDTO>
     getUser(id:string):Promise<IUserDto>
+    forgotPassword(email: string): Promise<void>
+    verifyForgotOtp(email: string, otp: string): Promise<void>
+    resetPassword(email: string, newPassword: string): Promise<void>
 }

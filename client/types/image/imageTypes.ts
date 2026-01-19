@@ -14,3 +14,19 @@ export type ImageUpdatePayload = {
   title?: string
   image?: File
 }
+export interface IImage{
+  id: string
+  imageUrl: string
+  title: string
+  order: number
+}
+
+export interface ImageValidationError {
+  title?: string;
+  file?: string;
+}
+
+export interface MultiImageValidationResult {
+  valid: boolean;
+  errors: Record<string, ImageValidationError>;
+}

@@ -21,13 +21,9 @@ export function OTPInput({ length = 6, onChange, error }: OTPInputProps) {
     const newValues = [...values]
     newValues[index] = value.slice(-1)
     setValues(newValues)
-
-    // Auto-focus next input
     if (value && index < length - 1) {
       inputRefs.current[index + 1]?.focus()
     }
-
-    // Call onChange with the full OTP
     onChange?.(newValues.join(""))
   }
 
@@ -48,8 +44,6 @@ export function OTPInput({ length = 6, onChange, error }: OTPInputProps) {
 
     setValues(newValues)
     onChange?.(newValues.slice(0, length).join(""))
-
-    // Focus last filled input or the next empty one
     const focusIndex = Math.min(
       newValues.findIndex((v) => v === ""),
       length - 1,

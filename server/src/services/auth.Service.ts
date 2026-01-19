@@ -149,10 +149,51 @@ async signup(data: { name: string; email: string; password: string }):Promise<vo
       const refreshToken = generateRefreshToken(user._id as unknown as string, "user");
       return UserResponseMapper.toLoginUserResponse(user, token, refreshToken);
     } catch (error: any) {
-      if (error.message && !error.message.includes("Google")) {
-        throw error;
-      }
       throwError(MESSAGES.AUTH.INVALID_GOOGLE_CREDENTIALS);
     }
+  }
+
+  async forgotPassword(email: string): Promise<void> {
+    const user = await this._authRepo.findOne({ email });
+    if (!user) return; 
+
+    const otp = generateOtp();
+    const redisKey = `otp:forgot:${email}`;
+    await redis.set(redisKey, otp, "EX", 180); 
+    await sendEmailOtp(email, otp);
+  }
+
+  async verifyForgotOtp(email: string, otp: string): Promise<void> {
+    const redisKey = `otp:forgot:${email}`;
+    const storedOtp = await redis.get(redisKey);
+
+    if (!storedOtp || storedOtp !== otp) {
+      throwError(MESSAGES.AUTH.INVALID_OTP);
+    }
+
+    await redis.del(redisKey);
+    const verifiedKey = `otp:forgot:verified:${email}`;
+    await redis.set(verifiedKey, "true", "EX", 300);
+  }
+
+  async resetPassword(email: string, newPassword: string): Promise<void> {
+    const verifiedKey = `otp:forgot:verified:${email}`;
+    const isVerified = await redis.get(verifiedKey);
+
+    if (!isVerified) {
+      throwError(MESSAGES.AUTH.AUTH_REQUIRED);
+    }
+
+    const user = await this._authRepo.findOne({ email });
+    if (!user) {
+      throwError(MESSAGES.AUTH.NOT_FOUND);
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await this._authRepo.update(user._id as unknown as string, {
+      password: hashedPassword
+    });
+
+    await redis.del(verifiedKey);
   }
 }
