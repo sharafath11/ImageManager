@@ -11,6 +11,7 @@ export const storeOtp = async (
   identifier: string,
   otp: string
 ): Promise<void> => {
+  if (!redis) throw new Error("Redis is not available");
   const key = `otp:${purpose}:${identifier}`;
   await redis.set(key, otp, "EX", OTP_TTL_SECONDS);
 };
@@ -20,6 +21,7 @@ export const verifyOtp = async (
   identifier: string,
   otp: string
 ): Promise<boolean> => {
+  if (!redis) throw new Error("Redis is not available");
   const key = `otp:${purpose}:${identifier}`;
   const storedOtp = await redis.get(key);
 

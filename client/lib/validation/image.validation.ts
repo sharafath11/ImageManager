@@ -1,4 +1,4 @@
-import {  MultiImageValidationResult } from "@/types/image/imageTypes";
+import { MultiImageValidationResult } from "@/types/image/imageTypes";
 
 export const ALLOWED_IMAGE_TYPES = ["image/png", "image/jpeg", "image/webp"];
 export const MAX_IMAGE_SIZE = 5 * 1024 * 1024; 

@@ -1,7 +1,23 @@
 import Redis from "ioredis";
+import { redisConfig } from "../config/redis";
 
-export const redis = new Redis({
-  host: process.env.REDIS_HOST || "127.0.0.1",
-  port: Number(process.env.REDIS_PORT) || 6379,
-  password: process.env.REDIS_PASSWORD || undefined,
-});
+const createRedis = () => {
+  if (redisConfig) {
+    const client = new Redis(redisConfig.url);
+
+    client.on("connect", () => {
+      console.log("Redis connected successfully");
+    });
+
+    client.on("error", (err) => {
+      console.error("Redis connection error:", err);
+    });
+
+    return client;
+  } else {
+    console.log("REDIS_URL not set – Redis disabled");
+    return null;
+  }
+};
+
+export const redis = createRedis();

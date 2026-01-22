@@ -36,6 +36,7 @@ export class AuthService implements IAuthService {
   }
 
 async signup(data: { name: string; email: string; password: string }):Promise<void> {
+  if (!redis) throwError("Redis service is unavailable");
   const existingUser = await this._authRepo.findOne({ email: data.email });
   if (existingUser?.isVerified) {
     throwError(MESSAGES.AUTH.USER_ALREADY_EXISTS);
@@ -72,6 +73,7 @@ async signup(data: { name: string; email: string; password: string }):Promise<vo
 
 
   async verifyOtp(email: string, otp: string): Promise<void> {
+    if (!redis) throwError("Redis service is unavailable");
     const user = await this._authRepo.findOne({ email });
     if (!user) throwError(MESSAGES.AUTH.NOT_FOUND);
     
@@ -89,6 +91,7 @@ async signup(data: { name: string; email: string; password: string }):Promise<vo
   }
 
   async resendOtp(email: string): Promise<void> {
+    if (!redis) throwError("Redis service is unavailable");
     const user = await this._authRepo.findOne({ email });
     if (!user) throwError(MESSAGES.AUTH.NOT_FOUND);
     if (user.isVerified) throwError(MESSAGES.AUTH.ALREADY_REGISTERED);
@@ -154,6 +157,7 @@ async signup(data: { name: string; email: string; password: string }):Promise<vo
   }
 
   async forgotPassword(email: string): Promise<void> {
+    if (!redis) throwError("Redis service is unavailable");
     const user = await this._authRepo.findOne({ email });
     if (!user) return; 
 
@@ -164,6 +168,7 @@ async signup(data: { name: string; email: string; password: string }):Promise<vo
   }
 
   async verifyForgotOtp(email: string, otp: string): Promise<void> {
+    if (!redis) throwError("Redis service is unavailable");
     const redisKey = `otp:forgot:${email}`;
     const storedOtp = await redis.get(redisKey);
 
@@ -177,6 +182,7 @@ async signup(data: { name: string; email: string; password: string }):Promise<vo
   }
 
   async resetPassword(email: string, newPassword: string): Promise<void> {
+    if (!redis) throwError("Redis service is unavailable");
     const verifiedKey = `otp:forgot:verified:${email}`;
     const isVerified = await redis.get(verifiedKey);
 
