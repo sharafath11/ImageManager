@@ -1,4 +1,4 @@
-//vdsjsv
+//vdsjsv dsfdsfds
 export const MailTemplates = {
   OTP: {
     SUBJECT: "Your verification code – Sharafath ST",
