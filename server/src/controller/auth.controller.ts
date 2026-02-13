@@ -26,7 +26,7 @@ export class AuthController implements IAuthController {
       if (!email || !password) throwError(MESSAGES.COMMON.MISSING_FIELDS,StatusCode.BAD_REQUEST);
 
       const result = await this._authServices.login(email, password);
-      setTokensInCookies(res,result.tocken,result.refreshToken)
+      setTokensInCookies(res,result.accessToken,result.refreshToken)
       sendResponse(
         res,
         StatusCode.OK,
@@ -157,7 +157,7 @@ export class AuthController implements IAuthController {
       const { googleToken } = req.body;
 
       const result = await this._authServices.googleAuth(googleToken);
-      setTokensInCookies(res, result.tocken, result.refreshToken);
+      setTokensInCookies(res, result.accessToken, result.refreshToken);
       
       sendResponse(
         res,

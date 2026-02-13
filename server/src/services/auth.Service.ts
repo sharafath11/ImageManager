@@ -11,7 +11,7 @@ import { IUserDto, IUserLoginDTO } from "../dtos/user/IUserDto";
 
 import { generateAccessToken, generateRefreshToken } from "../utils/jwtToken";
 import { generateOtp, OTP_TTL_SECONDS } from "../utils/otp.util";
-import { redis } from "../utils/redis";
+import { redis } from "../config/redis";
 import { sendEmailOtp } from "../utils/mail.util";
 
 @injectable()
@@ -66,8 +66,11 @@ async signup(data: { name: string; email: string; password: string }):Promise<vo
     throwError(MESSAGES.AUTH.OTP_ALREADY_SENT);
   }
 
+  console.log("[AuthService] Setting OTP in Redis...");
   await redis.set(redisKey, otp, "EX", OTP_TTL_SECONDS);
+  console.log("[AuthService] OTP set in Redis. Sending email...");
   await sendEmailOtp(user.email, otp);
+  console.log("[AuthService] Email sent.");
 
 }
 

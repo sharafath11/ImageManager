@@ -1,6 +1,6 @@
 export const MailTemplates = {
   OTP: {
-    SUBJECT: "Your verification code – Learn Vista",
+    SUBJECT: "Your verification code – Sharafath ST",
 
     TEXT: (otp: string) => `
 Your verification code is: ${otp}
@@ -60,7 +60,7 @@ If you did not request this, please ignore this email.
   },
 
   PASSWORD_RESET: {
-    SUBJECT: "Reset your password – Learn Vista",
+    SUBJECT: "Reset your password – Sharafath ST",
 
     TEXT: (link: string) => `
 You requested a password reset.
@@ -117,7 +117,7 @@ If you didn’t request this, ignore this email.
   },
 
   MENTOR_STATUS_CHANGE: {
-    SUBJECT: "Mentor application update – Learn Vista",
+    SUBJECT: "Mentor application update – Sharafath ST",
 
     TEXT: (status: string) => `
 Your mentor application status has been updated.

@@ -20,7 +20,7 @@ export function sendResponse<T>(
 export function handleControllerError(
   res: Response,
   error: unknown,
-  defaultStatus = 400
+  defaultStatus = 404
 ): void {
   let message = "Something went wrong";
   let statusCode = defaultStatus;

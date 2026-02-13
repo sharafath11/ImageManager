@@ -1,4 +1,4 @@
-import { redis } from "./redis";
+import { redis } from "../config/redis";
 
 export const OTP_TTL_SECONDS = 3 * 60; 
 

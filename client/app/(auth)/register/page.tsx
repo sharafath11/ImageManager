@@ -115,7 +115,7 @@ export default function RegisterPage() {
     });
 
     setIsLoading(false);
-
+    console.log(res.msg)
     if (!res || !res.ok) {
       setAlertMessage(res?.msg || "Registration failed");
       showErrorToast(res?.msg || "Registration failed");

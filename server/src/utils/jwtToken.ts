@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Response, CookieOptions } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { TokenPayload } from "../types/authTypes";
@@ -10,10 +10,11 @@ const ACCESS_EXPIRES_IN = "15m";
 const REFRESH_EXPIRES_IN = "7d";
 
 
-const cookieOptions = {
+const isProduction = process.env.NODE_ENV === "production";
+const cookieOptions: CookieOptions = {
   httpOnly: true,
-  secure: false,        
-  sameSite: "lax" as const,
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
   path: "/",
 };
 
