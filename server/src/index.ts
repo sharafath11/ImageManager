@@ -18,6 +18,12 @@ const allowedOrigins = [
   "https://imagemanager-st.vercel.app",
 ];
 
+console.log(`[Server] Startup Configuration:
+  NODE_ENV: ${process.env.NODE_ENV}
+  Port: ${process.env.PORT || 5000}
+  Allowed Origins: ${JSON.stringify(allowedOrigins)}
+`);
+
 app.use(
   cors({
     origin: (origin, callback) => {

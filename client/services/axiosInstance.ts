@@ -2,6 +2,8 @@ import axios from "axios";
 
 export const baseURL = process.env.NEXT_PUBLIC_BASEURL;
 
+console.log("[Client] API Base URL:", baseURL);
+
 const axiosInstance = axios.create({
   baseURL,
   withCredentials: true,

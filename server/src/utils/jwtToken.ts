@@ -11,10 +11,18 @@ const REFRESH_EXPIRES_IN = "7d";
 
 
 const isProduction = process.env.NODE_ENV === "production";
+
+console.log(`[Auth Service] Cookie Configuration:
+  NODE_ENV: ${process.env.NODE_ENV}
+  isProduction: ${isProduction}
+  COOKIE_SECURE: ${process.env.COOKIE_SECURE || (isProduction ? 'true' : 'false')}
+  COOKIE_SAMESITE: ${process.env.COOKIE_SAMESITE || (isProduction ? 'none' : 'lax')}
+`);
+
 const cookieOptions: CookieOptions = {
   httpOnly: true,
-  secure: isProduction,
-  sameSite: isProduction ? "none" : "lax",
+  secure: process.env.COOKIE_SECURE === 'true' || isProduction,
+  sameSite: (process.env.COOKIE_SAMESITE as "lax" | "strict" | "none") || (isProduction ? "none" : "lax"),
   path: "/",
 };
 
@@ -57,6 +65,11 @@ export const setTokensInCookies = (
   accessToken: string,
   refreshToken: string
 ) => {
+  console.log(`[Auth Service] Setting cookies:
+    Access Token: ${accessToken ? 'Present' : 'Missing'}
+    Refresh Token: ${refreshToken ? 'Present' : 'Missing'}
+    Options: ${JSON.stringify(cookieOptions)}
+  `);
   res.cookie("token", accessToken, cookieOptions);
   res.cookie("refreshToken", refreshToken, cookieOptions);
 };
